@@ -1,0 +1,6 @@
+# Mac settings folder
+.DS_Store
+
+# Executables
+go-xkcd
+

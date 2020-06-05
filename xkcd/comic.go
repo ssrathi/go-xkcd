@@ -1,5 +1,10 @@
 package xkcd
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // ComicFormat is the XKCD json format for returning a response.
 // Generated on https://mholt.github.io/json-to-go/
 type Comic struct {
@@ -14,4 +19,20 @@ type Comic struct {
 	Img        string `json:"img"`
 	Title      string `json:"title"`
 	Day        string `json:"day"`
+}
+
+func (c Comic) PrettyStr() string {
+	return fmt.Sprintf(
+		"XKCD Number: %d\nTitle: %s\nDate Published: %s-%s-%s\n"+
+			"Alt Text: %s\nImage Link: %s\n", c.Num, c.Title, c.Year,
+		c.Month, c.Day, c.Alt, c.Img)
+}
+
+func (c Comic) JsonStr() (string, error) {
+	json, err := json.MarshalIndent(c, "", "    ")
+	if err != nil {
+		return "", fmt.Errorf("Failed to parse server reponse: %s", err.Error())
+	}
+
+	return string(json), nil
 }

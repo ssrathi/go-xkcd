@@ -18,7 +18,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/ssrathi/go-xkcd/cmd"
+	"github.com/ssrathi/go-xkcd/xkcd"
 )
 
 func init() {
@@ -33,5 +33,5 @@ func init() {
 }
 
 func main() {
-	cmd.Execute()
+	xkcd.Execute()
 }
