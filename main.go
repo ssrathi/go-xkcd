@@ -3,6 +3,11 @@ CLI interface to read XKCD comics, implemented in Go language.
 
 This project is part of a learning exercise to implement a XKCD comic reader
 in Go language.
+
+This CLI can be used to download the latest XKCD, or a specified XKCD with a number,
+or a random XKCD from all published ones.
+
+See "go-xkcd --help" for usage and examples.
 */
 package main
 
