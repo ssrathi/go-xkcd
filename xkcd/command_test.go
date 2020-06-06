@@ -19,7 +19,7 @@ func assertEqual(t *testing.T, got interface{}, want interface{}) {
 func TestComicSpecificNums(t *testing.T) {
 	imgDir, err := ioutil.TempDir(os.TempDir(), "testGoXkcd")
 	assertEqual(t, err, nil)
-	// defer os.RemoveAll(imgDir)
+	defer os.RemoveAll(imgDir)
 
 	t.Logf("Image directory: %s", imgDir)
 	client := NewClient()
