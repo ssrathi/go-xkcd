@@ -1,5 +1,4 @@
-// Package xkcd implements a client to read XKCD JSON API data and to present
-// them in a specified output format.
+// Package xkcd implements a http client to read XKCD JSON API data.
 package xkcd
 
 import (
