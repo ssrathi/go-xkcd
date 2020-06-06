@@ -56,16 +56,16 @@ func (xc *Client) GetComicMetadata(number int) (Comic, error) {
 
 // GetComicImage downloads and saves the image from the given URL to the given
 // path on the directory.
-func (xc *Client) GetComicImage(imgUrl, dirPath string) (string, error) {
+func (xc *Client) GetComicImage(imgURL, dirPath string) (string, error) {
 	// Fetch the image and save it to the disk.
-	response, err := xc.httpClient.Get(imgUrl)
+	response, err := xc.httpClient.Get(imgURL)
 	if err != nil {
 		return "", fmt.Errorf("failed to get comic image from server: %s", err.Error())
 	}
 	defer response.Body.Close()
 
 	imgPath, _ := filepath.Abs(dirPath)
-	imgPath = filepath.Join(imgPath, path.Base(imgUrl))
+	imgPath = filepath.Join(imgPath, path.Base(imgURL))
 
 	imgData, _ := ioutil.ReadAll(response.Body)
 	err = ioutil.WriteFile(imgPath, imgData, 0644)

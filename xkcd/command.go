@@ -3,7 +3,9 @@ package xkcd
 import (
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
+	"time"
 )
 
 var (
@@ -47,6 +49,19 @@ func Execute() {
 	client := NewClient()
 	comic, err := client.GetComicMetadata(comicNum)
 	Check(err)
+
+	// If random comic is asked for, then generate a random comic nunber.
+	// Comic 404 doesn't exist as a joke (404 is not-found status code).
+	if comicNum == 0 && getRandom {
+		rand.Seed(time.Now().UnixNano())
+		randNum := rand.Intn(comic.Num + 1)
+		for randNum == 404 {
+			randNum = rand.Intn(comic.Num + 1)
+		}
+
+		comic, err = client.GetComicMetadata(randNum)
+		Check(err)
+	}
 
 	savePath, err = client.GetComicImage(comic.Img, savePath)
 	Check(err)
