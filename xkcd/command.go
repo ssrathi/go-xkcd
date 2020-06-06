@@ -1,4 +1,3 @@
-// Package cmd is the entry point for gogit command line parsing.
 package xkcd
 
 import (
@@ -35,7 +34,7 @@ func Execute() {
 	}
 
 	// Create a REST client to get the comic from XKCD website.
-	client := NewXkcdClient()
+	client := NewClient()
 	comic, err := client.GetComic(comicNum)
 	if err != nil {
 		fmt.Println(err)
@@ -45,7 +44,7 @@ func Execute() {
 	if outputFmt == "text" {
 		fmt.Println(comic.PrettyStr())
 	} else {
-		jsonOutput, err := comic.JsonStr()
+		jsonOutput, err := comic.JSONStr()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

@@ -1,3 +1,5 @@
+// Package xkcd implements a client to read XKCD JSON API data and to present
+// them in a specified output format.
 package xkcd
 
 import (
@@ -5,7 +7,7 @@ import (
 	"fmt"
 )
 
-// ComicFormat is the XKCD json format for returning a response.
+// Comic is the XKCD json format for returning a response.
 // Generated on https://mholt.github.io/json-to-go/
 type Comic struct {
 	Month      string `json:"month"`
@@ -21,6 +23,7 @@ type Comic struct {
 	Day        string `json:"day"`
 }
 
+// PrettyStr returns a human readable string representation of a XKCD comic.
 func (c Comic) PrettyStr() string {
 	return fmt.Sprintf(
 		"XKCD Number: %d\nTitle: %s\nDate Published: %s-%s-%s\n"+
@@ -28,10 +31,11 @@ func (c Comic) PrettyStr() string {
 		c.Month, c.Day, c.Alt, c.Img)
 }
 
-func (c Comic) JsonStr() (string, error) {
+// JSONStr returns a JSON formatted representation of a XKCD comic.
+func (c Comic) JSONStr() (string, error) {
 	json, err := json.MarshalIndent(c, "", "    ")
 	if err != nil {
-		return "", fmt.Errorf("Failed to parse server reponse: %s", err.Error())
+		return "", fmt.Errorf("Failed to parse server response: %s", err.Error())
 	}
 
 	return string(json), nil
