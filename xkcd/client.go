@@ -3,7 +3,10 @@ package xkcd
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"path"
+	"path/filepath"
 )
 
 // BaseURL is the XKCD website address.
@@ -21,9 +24,9 @@ func NewClient() *Client {
 	}
 }
 
-// GetComic fetches a specified comic number from the XKCD servers. If 'number' is
-// 0, then it fetches the latest comic.
-func (xc *Client) GetComic(number int) (Comic, error) {
+// GetComicMetadata fetches a specified comic number from the XKCD servers. If
+// 'number' is 0, then it fetches the latest comic.
+func (xc *Client) GetComicMetadata(number int) (Comic, error) {
 	var endpoint string
 	if number > 0 {
 		endpoint = fmt.Sprintf("%s/%d/info.0.json", BaseURL, number)
@@ -38,8 +41,8 @@ func (xc *Client) GetComic(number int) (Comic, error) {
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
-		return Comic{}, fmt.Errorf("invalid comic number. Failed with %d",
-			response.StatusCode)
+		return Comic{}, fmt.Errorf("invalid comic number: %s",
+			http.StatusText(response.StatusCode))
 	}
 
 	var comic Comic
@@ -49,4 +52,26 @@ func (xc *Client) GetComic(number int) (Comic, error) {
 	}
 
 	return comic, nil
+}
+
+// GetComicImage downloads and saves the image from the given URL to the given
+// path on the directory.
+func (xc *Client) GetComicImage(imgUrl, dirPath string) (string, error) {
+	// Fetch the image and save it to the disk.
+	response, err := xc.httpClient.Get(imgUrl)
+	if err != nil {
+		return "", fmt.Errorf("failed to get comic image from server: %s", err.Error())
+	}
+	defer response.Body.Close()
+
+	imgPath, _ := filepath.Abs(dirPath)
+	imgPath = filepath.Join(imgPath, path.Base(imgUrl))
+
+	imgData, _ := ioutil.ReadAll(response.Body)
+	err = ioutil.WriteFile(imgPath, imgData, 0644)
+	if err != nil {
+		return "", fmt.Errorf("failed to save comic image to disk: %s", err.Error())
+	}
+
+	return imgPath, nil
 }
