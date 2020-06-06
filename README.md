@@ -19,6 +19,11 @@ usage: go-xkcd [<args>]
     	Path to save the comic image (default ".")
 ```
 
+## Installation
+```
+go get github.com/ssrathi/go-xkcd
+```
+
 # Examples
 ```
 $ go-xkcd
