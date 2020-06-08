@@ -15,20 +15,13 @@ var (
 	savePath  string
 )
 
-// Check validates if there is an error and exits the program if any.
-func Check(err error) {
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-}
-
-// Execute parses CLI arguments and execute with the given options.
-func Execute() {
+// Run parses the CLI arguments and executes with the given options.
+// It returns the status code (0: success, 1: failure)
+func Run() int {
 	progName := os.Args[0]
 
 	// Prepare flags for user input.
-	flag.IntVar(&comicNum, "n", 0, "Get a specific comic number")
+	flag.IntVar(&comicNum, "n", 0, "Get a specific comic number (overrides -r)")
 	flag.BoolVar(&getRandom, "r", false, "Get a random comic")
 	flag.StringVar(&outputFmt, "o", "text", "Output format (text/json)")
 	flag.StringVar(&savePath, "s", ".", "Path to save the comic image")
@@ -42,13 +35,16 @@ func Execute() {
 	flag.Parse()
 	if outputFmt != "text" && outputFmt != "json" {
 		fmt.Printf("Invalid output format '%s'. Valid values {text/json}\n", outputFmt)
-		os.Exit(1)
+		return 1
 	}
 
 	// Create a REST client to get the comic from XKCD website.
 	client := NewClient()
 	comic, err := client.GetComicMetadata(comicNum)
-	Check(err)
+	if err != nil {
+		fmt.Println(err.Error())
+		return 1
+	}
 
 	// If random comic is asked for, then generate a random comic nunber.
 	// Comic 404 doesn't exist as a joke (404 is not-found status code).
@@ -59,12 +55,16 @@ func Execute() {
 			randNum = rand.Intn(comic.Num + 1)
 		}
 
-		comic, err = client.GetComicMetadata(randNum)
-		Check(err)
+		if comic, err = client.GetComicMetadata(randNum); err != nil {
+			fmt.Println(err.Error())
+			return 1
+		}
 	}
 
-	savePath, err = client.GetComicImage(comic.Img, savePath)
-	Check(err)
+	if savePath, err = client.GetComicImage(comic.Img, savePath); err != nil {
+		fmt.Println(err.Error())
+		return 1
+	}
 
 	var out string
 	if outputFmt == "text" {
@@ -73,8 +73,12 @@ func Execute() {
 		out, err = comic.JSONStr()
 	}
 
-	Check(err)
-	fmt.Println(out)
+	if err != nil {
+		fmt.Println(err.Error())
+		return 1
+	}
 
+	fmt.Println(out)
 	fmt.Printf("\nComic image saved at %s\n", savePath)
+	return 0
 }

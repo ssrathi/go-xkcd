@@ -11,7 +11,7 @@ go-xkcd - Read XKCD from command line.
 
 usage: go-xkcd [<args>]
   -n int
-    	Get a specific comic number
+    	Get a specific comic number (overrides -r)
   -o string
     	Output format (text/json) (default "text")
   -r	Get a random comic
@@ -29,7 +29,7 @@ go get github.com/ssrathi/go-xkcd
 $ go-xkcd
 XKCD Number: 2316
 Title: Hair Growth Rate
-Date Published: 2020-6-5
+Date Published: 05-Jun-2020
 Alt Text: Hourly haircuts would be annoying, but they'd be easier to do yourself, since you'd have adjacent hairs as a guide. Growing it out would be a huge pain, though.
 Image Link: https://imgs.xkcd.com/comics/hair_growth_rate.png
 
@@ -60,7 +60,7 @@ Comic image saved at <path>/barrel_cropped_(1).jpg
 $ go-xkcd -r
 XKCD Number: 2277
 Title: Business Greetings
-Date Published: 2020-3-6
+Date Published: 06-Mar-2020
 Alt Text: We have email and social media now, so we probably don't need to keep exchanging business cards by pressing them gently against each others' faces with an open palm and smearing them around.
 Image Link: https://imgs.xkcd.com/comics/business_greetings.png
 

@@ -31,5 +31,5 @@ func init() {
 }
 
 func main() {
-	xkcd.Execute()
+	os.Exit(xkcd.Run())
 }
