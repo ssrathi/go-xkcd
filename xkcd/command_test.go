@@ -27,17 +27,20 @@ func TestComicSpecificNums(t *testing.T) {
 	var tests = []struct {
 		comicNum int
 		title    string
+		dateStr  string
 	}{
-		{111, "Firefox and Witchcraft - The Connection?"},
-		{222, "Small Talk"},
-		{333, "Getting Out of Hand"},
+		{111, "Firefox and Witchcraft - The Connection?", "05-Jun-2006"},
+		{222, "Small Talk", "12-Feb-2007"},
+		{333, "Getting Out of Hand", "24-Oct-2007"},
 	}
 	for _, tc := range tests {
 		comic, err := client.GetComicMetadata(tc.comicNum)
 		assertEqual(t, err, nil)
-		got := comic.Title
-		want := tc.title
-		assertEqual(t, got, want)
+		assertEqual(t, comic.Title, tc.title)
+
+		dateStr, err := comic.Date()
+		assertEqual(t, err, nil)
+		assertEqual(t, dateStr, tc.dateStr)
 
 		// Download and check image.
 		imgFullPath, err := client.GetComicImage(comic.Img, imgDir)

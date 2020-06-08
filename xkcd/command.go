@@ -66,13 +66,15 @@ func Execute() {
 	savePath, err = client.GetComicImage(comic.Img, savePath)
 	Check(err)
 
+	var out string
 	if outputFmt == "text" {
-		fmt.Println(comic.PrettyStr())
+		out, err = comic.PrettyStr()
 	} else {
-		jsonOutput, err := comic.JSONStr()
-		Check(err)
-		fmt.Println(jsonOutput)
+		out, err = comic.JSONStr()
 	}
+
+	Check(err)
+	fmt.Println(out)
 
 	fmt.Printf("\nComic image saved at %s\n", savePath)
 }
